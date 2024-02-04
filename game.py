@@ -66,7 +66,6 @@ def snakeFill() :
             return("Collision")
 
 direction = "right"
-moving = True
 
 def pressedKey() :
     # If an arrow key is pressed
@@ -112,7 +111,7 @@ def snakeMoving() :
     print("If you want to exit game, press ESC at anytime")
     time.sleep(2)
     clearScreen()
-    while(moving) :
+    while(True) :
         zeraMatriz()
         redefineTela()
         if (snakeFill()) == "Collision" :
