@@ -2,7 +2,9 @@ import numpy as np
 import time
 import os
 
-tela = np.zeros((20,20))
+dimens = 20
+
+tela = np.zeros((dimens,dimens))
 snake = []
 
 def zeraMatriz() :
@@ -17,22 +19,22 @@ def clearScreen() :
         os.system('clear')
 
 def redefineTela() :
-    for i in range(20) :
+    for i in range(dimens) :
         tela[i, 0] = 1
     
-    for i in range(20) :
+    for i in range(dimens) :
         tela[0, i] = 1
 
-    for i in range(20) :
-        tela[i, 19] = 1
+    for i in range(dimens) :
+        tela[i, (dimens-1)] = 1
 
-    for i in range(20) :
-        tela[19, i] = 1
+    for i in range(dimens) :
+        tela[(dimens-1), i] = 1
 
 def exibeTela() :
-    for i in range(20) :
+    for i in range(dimens) :
         print("")
-        for j in range(20) :
+        for j in range(dimens) :
             if tela[i, j] == 1 :
                 print("#", end=" ")
             elif tela[i, j] == 0 :
