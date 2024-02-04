@@ -1,8 +1,16 @@
 import numpy as np
 import time
 import os
+if os.name=='nt' :
+    import msvcrt
+else :
+    import sys
+    import select
+    import tty
+    import termios
 
 dimens = 20
+speed = 0.3
 
 tela = np.zeros((dimens,dimens))
 snake = []
@@ -45,8 +53,7 @@ def exibeTela() :
                 print("E", end=" ")
     print("\n")
 
-snake.append(9)
-snake.append(9)
+snake = [9,9]
 
 def snakeFill() :
     for i in range(0,len(snake),2) :
@@ -55,30 +62,57 @@ def snakeFill() :
         if(tela[x,y]!=1) :
             tela[x,y]=2
         else :
-            moving = False
             clearScreen()
             return("Collision")
 
 direction = "right"
 moving = True
 
+def pressedKey() :
+    # If an arrow key is pressed
+    code1 = msvcrt.getch()
+    if code1 == b'\xe0' :
+        code2 = msvcrt.getch()
+        # If up
+        if code2 == b'H' :
+            return "up"
+        # If down
+        elif code2 == b'P' :
+            return "down"
+        # If right
+        elif code2 == b'M' :
+            return "right"
+        # If left
+        elif code2 == b'K' :
+            return "left"
+    # If ESC key is pressed
+    elif code1 == b'\x1b' :
+        return "exit"
+        
 def movimentaSnake() :
     if direction == "down" :
         for i in range(0,len(snake),2) :
             snake[i] = snake[i]+1
-    if direction == "right" :
+    elif direction == "right" :
         for i in range(1,len(snake),2) :
             snake[i] = snake[i]+1
-    if direction == "up" :
+    elif direction == "up" :
         for i in range(0,len(snake),2) :
             snake[i] = snake[i]-1
-    if direction == "left" :
+    elif direction == "left" :
         for i in range(1,len(snake),2) :
             snake[i] = snake[i]-1
 
 def snakeMoving() :
     clearScreen()
-    while(moving==True) :
+    print("Welcome to PySnake game")
+    time.sleep(1.5)
+    clearScreen()
+    print("Control the snake with arrows")
+    print("If you want to exit game, press ESC at anytime")
+    time.sleep(2)
+    clearScreen()
+    while(moving) :
         zeraMatriz()
         redefineTela()
         if (snakeFill()) == "Collision" :
@@ -86,8 +120,17 @@ def snakeMoving() :
             print("GAME OVER")
             break
         exibeTela()
+        if msvcrt.kbhit():
+            ret = pressedKey()
+            if (ret == "exit") :
+                clearScreen()
+                print("You pressed ESC\nExiting game")
+                break
+            else :
+                global direction
+                direction = ret
         movimentaSnake()
-        time.sleep(1)
+        time.sleep(speed)
         clearScreen()
     
 snakeMoving()
