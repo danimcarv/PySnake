@@ -4,13 +4,18 @@ import os
 if os.name=='nt' :
     import msvcrt
 else :
-    import sys
-    import select
-    import tty
-    import termios
+    try :
+        import sys
+        import select
+        import tty
+        import termios
+    except:
+        print("Unsupported Operating System.")
+        print("This game is only supported on Windows and Unix-like systems.")
+        exit()
 
-dimens = 20
-speed = 0.3
+dimens = 30
+interval = 0.1
 
 tela = np.zeros((dimens,dimens))
 snake = []
@@ -67,7 +72,7 @@ def snakeFill() :
 
 direction = "right"
 
-def pressedKey() :
+def pressedKeyNT() :
     # If an arrow key is pressed
     code1 = msvcrt.getch()
     if code1 == b'\xe0' :
@@ -87,7 +92,16 @@ def pressedKey() :
     # If ESC key is pressed
     elif code1 == b'\x1b' :
         return "exit"
-        
+
+def directionChange(ret) :
+    if (ret == "exit") :
+        clearScreen()
+        print("You pressed ESC\nExiting game")
+        return "exit"
+    else :
+        global direction
+        direction = ret
+ 
 def movimentaSnake() :
     if direction == "down" :
         for i in range(0,len(snake),2) :
@@ -119,17 +133,16 @@ def snakeMoving() :
             print("GAME OVER")
             break
         exibeTela()
-        if msvcrt.kbhit():
-            ret = pressedKey()
-            if (ret == "exit") :
-                clearScreen()
-                print("You pressed ESC\nExiting game")
-                break
-            else :
-                global direction
-                direction = ret
+        if os.name=='nt' :
+            if msvcrt.kbhit():
+                if (directionChange(pressedKeyNT())) == "exit" :
+                    break
+        else :
+            if unixKeyPress() :
+                if (directionChange(pressedKeyUnix())) == "exit" :
+                    break
         movimentaSnake()
-        time.sleep(speed)
+        time.sleep(interval)
         clearScreen()
     
 snakeMoving()
