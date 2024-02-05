@@ -14,8 +14,8 @@ else :
         print("This game is only supported on Windows and Unix-like systems.")
         exit()
 
-dimens = 30
-interval = 0.1
+dimens = 20
+interval = 0.2
 
 tela = np.zeros((dimens,dimens))
 snake = []
