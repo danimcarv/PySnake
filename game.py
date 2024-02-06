@@ -98,7 +98,7 @@ def directionChange(ret) :
         clearScreen()
         print("You pressed ESC\nExiting game")
         return "exit"
-    else :
+    elif (ret == "up" or ret == "down" or ret == "left" or ret == "right") :
         global direction
         direction = ret
  
